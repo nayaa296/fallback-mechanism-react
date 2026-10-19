@@ -1,0 +1,44 @@
+<%- include('../partials/_head') %>
+    <h2 class="mb-4">Daftar Penulis</h2>
+    <a href="/penulis/create" class="btn btn-sm btn-primary mb-3">Tambah Data</a>
+
+    <% if(messages.success) { %>
+        <div class="alert alert-success"><% messages.success %></div>
+    <% } %>
+
+    <% if(messages.error) { %>
+        <div class="alert alert-danger"><% messages.error %></div>
+    <% } %>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nama Penulis</th>
+                <th>Email</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if(data.length) { %>
+                <% for(var i = 0; i < data.length; i++) { %>
+                    <tr>
+                        <td><%= (i+1) %></td>
+                        <td><%= data[i].nama %></td>
+                        <td><%= data[i].email %></td>
+                        <td>
+                            <a href="/penulis/edit/<%= data[i].id %>" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="/penulis/delete/<%= data[i].id %>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Delete</a>
+                        </td>
+                    </tr>
+                <% } %>
+            <% } else { %>
+                <tr>
+                    <td colspan="4" class="text-center">Data Kosong</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+
+  <%- include('../partials/_foot') %>

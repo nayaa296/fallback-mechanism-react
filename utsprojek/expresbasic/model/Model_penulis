@@ -1,0 +1,67 @@
+const 
+
+class Model_penulis {
+
+    static async getAll() {
+        return new Promise((resolve, reject) => {
+            connection.query('select * from penulis order by id desc', (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    static async Store(Data) {
+        return new Promise((resolve, reject) => {
+            connection.query('insert into penulis set ?', Data, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
+
+    static async getId(id) {
+        return new Promise((resolve, reject) => {
+            connection.query('select * from penulis where id = ' + id, (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    static async update(id, Data) {
+        return new Promise((resolve, reject) => {
+            connection.query('update penulis set ? where id = ' + id, Data, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
+
+    static async delete(id) {
+        return new Promise((resolve, reject) => {
+            connection.query('delete from penulis where id = ' + id, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    }
+
+}
+
+module.exports = Model_penulis;

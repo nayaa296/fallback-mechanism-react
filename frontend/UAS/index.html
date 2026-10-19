@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poktan Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+    }
+    .login-page {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .login-card {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      width: 400px;
+      max-width: 90vw;
+    }
+    .login-card h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+    .login-card p {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 28px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+    }
+    .btn {
+      padding: 11px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: #4f46e5;
+      color: white;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      background: #4338ca;
+    }
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+    .btn-warning {
+      background: #f59e0b;
+      color: white;
+    }
+    .btn-warning:hover {
+      background: #d97706;
+    }
+    .btn-success {
+      background: #10b981;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #059669;
+    }
+    .btn-sm {
+      padding: 7px 14px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #e5e7eb;
+      color: #374151;
+    }
+    .btn-outline:hover {
+      background: #f9fafb;
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .error-msg {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+
+    /* Dashboard */
+    .dashboard {
+      display: none;
+    }
+    .dashboard.show {
+      display: block;
+    }
+    .navbar {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 14px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+    .navbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .navbar .user-info .btn {
+      width: auto;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 32px;
+    }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .page-header h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+    .table-wrapper {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead {
+      background: #f9fafb;
+    }
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 13px;
+    }
+    th {
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+    td {
+      color: #374151;
+      border-top: 1px solid #f3f4f6;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .badge-aktif { background: #d1fae5; color: #065f46; }
+    .badge-nonaktif { background: #fef3c7; color: #92400e; }
+    .actions { display: flex; gap: 6px; }
+    .loading-state {
+      text-align: center;
+      padding: 48px;
+      color: #9ca3af;
+      font-size: 14px;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 48px;
+      color: #9ca3af;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      width: 480px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .modal h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #1a1a2e;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 2000;
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .toast.show { transform: translateX(0); }
+    .toast-success { background: #10b981; }
+    .toast-error { background: #ef4444; }
+
+    @media (max-width: 768px) {
+      .container { padding: 16px; }
+      .navbar { padding: 12px 16px; }
+      .table-wrapper { overflow-x: auto; }
+      .page-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Page -->
+  <div class="login-page" id="loginPage">
+    <div class="login-card">
+      <h1>Poktan Management</h1>
+      <p>Masuk untuk mengelola data kelompok tani</p>
+      <div class="error-msg" id="loginError"></div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" value="kucing@gmail.com" placeholder="nama@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" value="1" placeholder="Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="loginBtn">Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard">
+    <nav class="navbar">
+      <h2>Poktan Management</h2>
+      <div class="user-info">
+        <span id="userEmail">kucing@gmail.com</span>
+        <button class="btn btn-outline btn-sm" onclick="logout()">Keluar</button>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="page-header">
+        <h3>Data Kelompok Tani</h3>
+        <button class="btn btn-primary" onclick="openCreateModal()">+ Tambah Poktan</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Poktan</th>
+              <th>Ketua</th>
+              <th>Alamat</th>
+              <th>No. Register</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="poktanTableBody">
+            <tr>
+              <td colspan="7" class="loading-state">Memuat data...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Create / Edit -->
+  <div class="modal-overlay" id="poktanModal">
+    <div class="modal">
+      <h3 id="modalTitle">Tambah Poktan</h3>
+      <form id="poktanForm">
+        <input type="hidden" id="poktanId">
+        <div class="form-group">
+          <label for="nama_poktan">Nama Poktan</label>
+          <input type="text" id="nama_poktan" required>
+        </div>
+        <div class="form-group">
+          <label for="ketua_poktan">Ketua Poktan</label>
+          <input type="text" id="ketua_poktan" required>
+        </div>
+        <div class="form-group">
+          <label for="alamat">Alamat</label>
+          <input type="text" id="alamat" required>
+        </div>
+        <div class="form-group">
+          <label for="nomer_register">No. Register</label>
+          <input type="text" id="nomer_register" required>
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status">
+            <option value="aktif">Aktif</option>
+            <option value="nonaktif">Nonaktif</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" onclick="closeModal()">Batal</button>
+          <button type="submit" class="btn btn-primary" id="modalSubmitBtn">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_BASE = 'https://class.pmapowers.com/api';
+
+    function getToken() {
+      return localStorage.getItem('token');
+    }
+
+    function setToken(token) {
+      localStorage.setItem('token', token);
+    }
+
+    function clearToken() {
+      localStorage.removeItem('token');
+    }
+
+    // ===== Toast =====
+    function showToast(message, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = message;
+      t.className = 'toast toast-' + type + ' show';
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ===== Login =====
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('loginBtn');
+      const errEl = document.getElementById('loginError');
+
+      btn.disabled = true;
+      btn.textContent = 'Memproses...';
+      errEl.classList.remove('show');
+
+      try {
+        const res = await fetch(API_BASE + '/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Login gagal');
+        setToken(data.token);
+        document.getElementById('userEmail').textContent = email;
+        showLoginSuccess();
+        loadPoktan();
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.add('show');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Masuk';
+      }
+    });
+
+    function showLoginSuccess() {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('dashboard').classList.add('show');
+    }
+
+    function logout() {
+      clearToken();
+      document.getElementById('dashboard').classList.remove('show');
+      document.getElementById('loginPage').style.display = 'flex';
+    }
+
+    // Check if already logged in
+    if (getToken()) {
+      showLoginSuccess();
+      loadPoktan();
+    }
+
+    // ===== CRUD =====
+    async function apiFetch(url, options = {}) {
+      const token = getToken();
+      const defaultHeaders = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token
+      };
+      const res = await fetch(url, {
+        ...options,
+        headers: { ...defaultHeaders, ...options.headers }
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Request gagal');
+      return data;
+    }
+
+    async function loadPoktan() {
+      const tbody = document.getElementById('poktanTableBody');
+      tbody.innerHTML = '<tr><td colspan="7" class="loading-state">Memuat data...</td></tr>';
+      try {
+        const result = await apiFetch(API_BASE + '/poktan');
+        const poktanList = result.data || [];
+        if (poktanList.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Belum ada data poktan</td></tr>';
+          return;
+        }
+        tbody.innerHTML = poktanList.map((p, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td><strong>${escapeHtml(p.nama_poktan)}</strong></td>
+            <td>${escapeHtml(p.ketua_poktan)}</td>
+            <td>${escapeHtml(p.alamat)}</td>
+            <td>${escapeHtml(p.nomer_register)}</td>
+            <td><span class="badge badge-${p.status}">${p.status}</span></td>
+            <td>
+              <div class="actions">
+                <button class="btn btn-warning btn-sm" onclick="openEditModal(${p.id})">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="confirmDelete(${p.id})">Hapus</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Gagal memuat data: ${err.message}</td></tr>`;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ===== Create / Edit Modal =====
+    function openCreateModal() {
+      document.getElementById('modalTitle').textContent = 'Tambah Poktan';
+      document.getElementById('poktanId').value = '';
+      document.getElementById('poktanForm').reset();
+      document.getElementById('status').value = 'aktif';
+      document.getElementById('modalSubmitBtn').textContent = 'Simpan';
+      document.getElementById('poktanModal').classList.add('show');
+    }
+
+    async function openEditModal(id) {
+      document.getElementById('modalTitle').textContent = 'Edit Poktan';
+      document.getElementById('poktanId').value = id;
+      document.getElementById('modalSubmitBtn').textContent = 'Update';
+
+      try {
+        const result = await apiFetch(API_BASE + '/poktan');
+        const poktan = result.data.find(p => p.id === id);
+        if (!poktan) throw new Error('Data tidak ditemukan');
+        document.getElementById('nama_poktan').value = poktan.nama_poktan || '';
+        document.getElementById('ketua_poktan').value = poktan.ketua_poktan || '';
+        document.getElementById('alamat').value = poktan.alamat || '';
+        document.getElementById('nomer_register').value = poktan.nomer_register || '';
+        document.getElementById('status').value = poktan.status || 'aktif';
+        document.getElementById('poktanModal').classList.add('show');
+      } catch (err) {
+        showToast('Gagal memuat data: ' + err.message, 'error');
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('poktanModal').classList.remove('show');
+    }
+
+    // Submit form
+    document.getElementById('poktanForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const id = document.getElementById('poktanId').value;
+      const payload = {
+        nama_poktan: document.getElementById('nama_poktan').value,
+        ketua_poktan: document.getElementById('ketua_poktan').value,
+        alamat: document.getElementById('alamat').value,
+        nomer_register: document.getElementById('nomer_register').value,
+        status: document.getElementById('status').value
+      };
+      const btn = document.getElementById('modalSubmitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Menyimpan...';
+
+      try {
+        if (id) {
+          // Update
+          await apiFetch(API_BASE + '/poktan/' + id, {
+            method: 'PUT',
+            body: JSON.stringify(payload)
+          });
+          showToast('Data berhasil diupdate');
+        } else {
+          // Create
+          await apiFetch(API_BASE + '/poktan/store', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          showToast('Data berhasil ditambahkan');
+        }
+        closeModal();
+        loadPoktan();
+      } catch (err) {
+        showToast('Gagal: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = id ? 'Update' : 'Simpan';
+      }
+    });
+
+    // ===== Delete =====
+    async function confirmDelete(id) {
+      if (!confirm('Yakin ingin menghapus data ini?')) return;
+      try {
+        await apiFetch(API_BASE + '/poktan/' + id, { method: 'DELETE' });
+        showToast('Data berhasil dihapus');
+        loadPoktan();
+      } catch (err) {
+        showToast('Gagal menghapus: ' + err.message, 'error');
+      }
+    }
+
+    // Click outside modal to close
+    document.getElementById('poktanModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Escape key to close modal
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<%- include('../partials/_head') %>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Tambah Penulis Baru</h5>
+                    <a href="/penulis" class="btn btn-sm btn-light">Kembali</a>
+                </div>
+                <div class="card-body">
+
+                    <% if(messages.error) { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <%= messages.error %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <% } %>
+
+                    <form action="/penulis/store" method="POST">
+                        
+                        <div class="mb-3">
+                            <label for="nama" class="form-label font-weight-bold">Nama Lengkap</label>
+                            <input type="text" 
+                                   name="nama" 
+                                   id="nama" 
+                                   class="form-control" 
+                                   placeholder="Masukkan nama penulis" 
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label font-weight-bold">Alamat Email</label>
+                            <input type="email" 
+                                   name="email" 
+                                   id="email" 
+                                   class="form-control" 
+                                   placeholder="email@contoh.com" 
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label font-weight-bold">Password</label>
+                            <input type="password" 
+                                   name="password" 
+                                   id="password" 
+                                   class="form-control" 
+                                   placeholder="Minimal 6 karakter" 
+                                   required>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Simpan Penulis</button>
+                            <button type="reset" class="btn btn-outline-secondary">Reset Form</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+ <%- include('../partials/_foot') %>
